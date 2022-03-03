@@ -8,7 +8,7 @@
         >
       </div>
       <div class="category__item">
-        <router-link class="category__link" to="/">Amazing girls</router-link>
+        <router-link class="category__link" to="/">Other</router-link>
       </div>
     </div>
   </div>
@@ -22,7 +22,6 @@ export default {
 </script>
 <style lang='scss' scoped>
 .container {
-  background: linear-gradient(to right, #ff5e62, #ff9966);
 }
 .category {
   // .category__choose
@@ -56,7 +55,7 @@ export default {
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
       rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
       rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 
     &:hover {
       transform: scale(1.1);

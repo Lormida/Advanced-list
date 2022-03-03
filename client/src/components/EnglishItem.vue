@@ -92,18 +92,6 @@ export default {
       ctx.emit('off-trigger-fold')
     })
 
-
-    const displayPrompt = (statusPrompt, messagePrompt) => {
-      console.log(statusPrompt, messagePrompt)
-      store.commit('setStatusPrompt', statusPrompt)
-      store.commit('setMessagePrompt', messagePrompt)
-      activatedPrompt.value = true
-
-      setTimeout(() => {
-        activatedPrompt.value = false
-      }, 2000)
-    }
-
     return {
       toggleTranslate, currentIsOrigin, deleteItem,
       saveItem, engItemId, engItemOrigin, engItemTranslate, updateCurrentItemId

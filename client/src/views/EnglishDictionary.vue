@@ -94,17 +94,19 @@ export default {
       if ((e.key.toUpperCase() == 'S' || e.key.toUpperCase() == 'Ы') && e.ctrlKey) {
         e.preventDefault()
         const currentId = store.getters.getCurrentItemId
-        const { _id, origin, translate } = (store.getters.getEnglishDict.find(item => item._id == currentId))
+        if (currentId) {
+          const { _id, origin, translate } = (store.getters.getEnglishDict.find(item => item._id == currentId))
 
-        store.dispatch('saveModifiedEnglishPhrase', { id: _id, origin, translate })
-          .catch(err => err)
-          .then(({ statusCode, message, error }) => {
-            if (error) {
-              store.dispatch('displayPrompt', { statusCode, message })
-            }
-          })
+          store.dispatch('saveModifiedEnglishPhrase', { id: _id, origin, translate })
+            .catch(err => err)
+            .then(({ statusCode, message, error }) => {
+              if (error) {
+                store.dispatch('displayPrompt', { statusCode, message })
+              }
+            })
 
-        triggerFoldValue.value = true
+          triggerFoldValue.value = true
+        }
       }
     })
 
@@ -117,7 +119,7 @@ export default {
           }
         })
 
-        
+
     })
 
     return {
