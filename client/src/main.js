@@ -4,8 +4,9 @@ import router from './router'
 import store from './store'
 
 import './assets/reset.css'
+import Prompt from './components/Prompt'
 
-createApp(App)
-    .use(store)
-    .use(router)
-    .mount('#app')
+const app = createApp(App)
+
+app.component('Prompt', Prompt)
+app.use(store).use(router).mount('#app')

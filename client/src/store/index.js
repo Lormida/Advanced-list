@@ -11,8 +11,9 @@ export default createStore({
   state: {
     englishDict: [],
     currentItemId: null,
-    promptStatus: null,
-    promptMessage: null
+    statusPrompt: null,
+    messagePrompt: null,
+    activatePrompt: false
   },
   getters: {
     getEnglishDict(state) {
@@ -21,11 +22,14 @@ export default createStore({
     getCurrentItemId(state) {
       return state.currentItemId
     },
-    getPromptStatus(state) {
-      return state.promptStatus
+    getStatusPrompt(state) {
+      return state.statusPrompt
     },
-    getPromptMessage(state) {
-      return state.promptMessage
+    getMessagePrompt(state) {
+      return state.messagePrompt
+    },
+    getActivatePrompt(state) {
+      return state.activatePrompt
     }
   },
   mutations: {
@@ -35,13 +39,15 @@ export default createStore({
     setCurrentItemId(state, id) {
       state.currentItemId = id
     },
-    setPromptStatus(state, promptStatus) {
-      state.promptStatus = promptStatus
+    setStatusPrompt(state, statusPrompt) {
+      state.statusPrompt = statusPrompt
     },
-    setPromptMessage(state, promptMessage) {
-      state.promptMessage = promptMessage
+    setMessagePrompt(state, messagePrompt) {
+      state.messagePrompt = messagePrompt
     },
-
+    setActivatePrompt(state, status) {
+      state.activatePrompt = status
+    },
     addLocalItem(state, payload) {
       const { _id, origin, translate } = payload
       state.englishDict.push({ _id, origin, translate })
@@ -98,6 +104,17 @@ export default createStore({
         const newData = response.data
         ctx.commit('addLocalItem', newData)
       }, 'Success creating')
+    },
+    async displayPrompt(ctx, payload) {
+      const { statusCode: statusPrompt, message: messagePrompt } = payload
+      ctx.commit('setStatusPrompt', statusPrompt)
+      ctx.commit('setMessagePrompt', messagePrompt)
+      ctx.commit('setActivatePrompt', true)
+
+      setTimeout(() => {
+        ctx.commit('setActivatePrompt', false)
+      }, 2000)
+
     }
   },
   modules: {

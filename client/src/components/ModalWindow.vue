@@ -56,8 +56,12 @@ export default {
           origin: originValue.value,
           translate: translateValue.value
         })
-          .then(data => console.log('Success : ', data))
-          .catch(e => console.log('Failure : ', e))
+          .catch(err => err)
+          .then(({ statusCode, message, error }) => {
+            if (error) {
+              store.dispatch('displayPrompt', { statusCode, message })
+            }
+          })
 
         originValue.value = ''
         translateValue.value = ''

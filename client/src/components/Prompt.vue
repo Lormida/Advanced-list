@@ -1,32 +1,44 @@
 <template>
-  <div class="prompt">
-    <h2 class="prompt__header">{{ status }}</h2>
-    <p class="prompt__text">{{ message }}</p>
+  <div class="prompt" :class="getClassStatus">
+    <!-- <h2 class="prompt__header">{{ statusCode }}</h2> -->
+    <h2 class="prompt__text">{{ message }}</h2>
   </div>
 </template>
 
 <script>
+import { computed } from 'vue'
 export default {
-  props: ['status', 'message'],
-  setup() {
 
+  props: ['statusCode', 'message'],
+  setup(props) {
+    const getClassStatus = computed(() => {
+      let status = null
+      let statusCode = props.statusCode
+      if (String(statusCode).startsWith('2')) {
+        status = 'success'
+      } else {
+        status = 'error'
+      }
+      return status
+    })
+
+    return { getClassStatus }
   }
 }
 </script>
 <style lang='scss' scoped>
 .prompt {
   position: fixed;
-  top: 1%;
+  top: 0%;
   left: 50%;
   transform: translateX(-50%);
-  height: 100px;
-  width: 30%;
+  height: auto;
+  width: 35%;
   padding: 1rem 2rem;
   border: 2px solid #fff;
-  border-radius: 10px;
-  background-color: rgba(102, 189, 109, 1);
+  border-radius: 1px;
   font-size: 2rem;
-  font-family: "Montserrat Bold";
+  font-family: "Montserrat Regular";
   text-align: center;
   // .prompt__header
 
@@ -37,5 +49,11 @@ export default {
 
   &__text {
   }
+}
+.error {
+  background-color: rgb(221, 97, 97);
+}
+.success {
+  background-color: rgba(102, 189, 109, 1);
 }
 </style>

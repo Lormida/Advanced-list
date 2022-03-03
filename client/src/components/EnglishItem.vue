@@ -42,6 +42,7 @@ export default {
     let engItemOrigin = ref(props.engItem.origin)
     let engItemTranslate = ref(props.engItem.translate)
     let engItemId = ref(props.engItem._id)
+    let activatedPrompt = ref(false)
 
 
     const store = useStore()
@@ -54,8 +55,10 @@ export default {
       store.dispatch('deleteEnglishPhrase', {
         id: engItemId.value,
       })
-        .then(statusText => console.log(statusText))
-        .catch((err) => console.log('Failure : ', err))
+        .catch(err => err)
+        .then(({ statusCode, message }) => {
+          store.dispatch('displayPrompt', { statusCode, message })
+        })
     }
 
     const saveItem = () => {
@@ -64,8 +67,11 @@ export default {
         origin: engItemOrigin.value,
         translate: engItemTranslate.value
       })
-        .then(statusText => console.log(statusText))
-        .catch((err) => console.log('Failure : ', err))
+        .then(({ statusCode, message, error }) => {
+          if (error) {
+            store.dispatch('displayPrompt', { statusCode, message })
+          }
+        })
 
       currentIsOrigin.value = true
     }
@@ -85,6 +91,18 @@ export default {
       currentIsOrigin.value = true
       ctx.emit('off-trigger-fold')
     })
+
+
+    const displayPrompt = (statusPrompt, messagePrompt) => {
+      console.log(statusPrompt, messagePrompt)
+      store.commit('setStatusPrompt', statusPrompt)
+      store.commit('setMessagePrompt', messagePrompt)
+      activatedPrompt.value = true
+
+      setTimeout(() => {
+        activatedPrompt.value = false
+      }, 2000)
+    }
 
     return {
       toggleTranslate, currentIsOrigin, deleteItem,

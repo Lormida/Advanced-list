@@ -22,9 +22,9 @@
     ></modal-window>
     <!-- <Loader></Loader> -->
     <prompt
-      v-if="activatedPrompt"
-      :status="getPromptStatus"
-      :message="getPromptMessage"
+      v-if="getActivatePrompt"
+      :statusCode="getStatusPrompt"
+      :message="getMessagePrompt"
     ></prompt>
   </div>
 </template>
@@ -35,14 +35,12 @@ import { onMounted, computed, ref } from 'vue'
 import EnglishItem from '../components/EnglishItem.vue'
 import ModalWindow from '../components/ModalWindow.vue'
 import Loader from '../components/Loader.vue'
-import Prompt from '../components/Prompt.vue'
 
 export default {
   components: {
     EnglishItem,
     ModalWindow,
     Loader,
-    Prompt
   },
 
   setup() {
@@ -50,7 +48,6 @@ export default {
     let modalWindowOpen = ref(false)
     let currentIsOrigin = ref(true)
     let triggerFoldValue = ref(false)
-    let activatedPrompt = ref(true)
 
     const offTriggerFold = () => {
       triggerFoldValue.value = false
@@ -81,12 +78,16 @@ export default {
       return modalWindowOpen.value
     })
 
-    const getPromptStatus = computed(() => {
-      return store.getters.getPromptStatus
+    const getStatusPrompt = computed(() => {
+      return store.getters.getStatusPrompt
     })
 
-    const getPromptMessage = computed(() => {
-      return store.getters.getPromptMessage
+    const getMessagePrompt = computed(() => {
+      return store.getters.getMessagePrompt
+    })
+
+    const getActivatePrompt = computed(() => {
+      return store.getters.getActivatePrompt
     })
 
     document.body.addEventListener('keydown', e => {
@@ -96,8 +97,12 @@ export default {
         const { _id, origin, translate } = (store.getters.getEnglishDict.find(item => item._id == currentId))
 
         store.dispatch('saveModifiedEnglishPhrase', { id: _id, origin, translate })
-          .then(statusText => console.log(statusText))
-          .catch((err) => console.log('Failure : ', err))
+          .catch(err => err)
+          .then(({ statusCode, message, error }) => {
+            if (error) {
+              store.dispatch('displayPrompt', { statusCode, message })
+            }
+          })
 
         triggerFoldValue.value = true
       }
@@ -105,15 +110,22 @@ export default {
 
     onMounted(() => {
       store.dispatch('loadEnglishDict')
-        .then(statusText => console.log(statusText))
-        .catch((err) => console.log('Failure : ', err))
+        .catch(err => err)
+        .then(({ statusCode, message, error }) => {
+          if (error) {
+            store.dispatch('displayPrompt', { statusCode, message })
+          }
+        })
+
+        
     })
 
     return {
       getEnglishDict, toggleTranslate, currentIsOrigin,
       openModal, closeModal, modalWindowOpen, getModalWindowOpen,
-      triggerFold, triggerFoldValue, offTriggerFold, activatedPrompt,
-      getPromptStatus, getPromptMessage
+      triggerFold, triggerFoldValue, offTriggerFold,
+      getStatusPrompt, getMessagePrompt,
+      getActivatePrompt
     }
   }
 }

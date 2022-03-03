@@ -4,11 +4,11 @@ const catchWrapper = (cb, successText) => {
 
     const error = await cb().catch(e => {
       const { statusCode, message } = e.response.data
-      return { statusCode, message }
+      return { statusCode: +statusCode, message, error: true }
     })
 
     if (!error) {
-      return res(successText)
+      return res({ statusCode: 200, message: successText })
     }
     return rej(error)
 
