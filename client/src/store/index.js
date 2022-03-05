@@ -2,7 +2,7 @@ import { createStore } from 'vuex'
 import axios from 'axios'
 import catchWrapper from './catchWrapper'
 
-const targetURL = 'http://localhost:3000'
+const targetURL = '/api'
 const axiosIns = axios.create({
   // withCredentials: true,
 })
@@ -67,7 +67,7 @@ export default createStore({
     async saveModifiedEnglishPhrase(ctx, newData) {
       return catchWrapper(async () => {
         const { id, origin, translate } = newData
-        await axiosIns.patch(`${targetURL}/api/modify-english-phrase/${id}`, {
+        await axiosIns.patch(`${targetURL}/modify-english-phrase/${id}`, {
           origin, translate
         })
       }, 'Success modify and save')
@@ -77,7 +77,7 @@ export default createStore({
     // +
     async loadEnglishDict(ctx) {
       return catchWrapper(async () => {
-        const response = await axiosIns.get(`${targetURL}/api/english-dictionary`)
+        const response = await axiosIns.get(`${targetURL}/english-dictionary`)
         const englishDict = response.data
         ctx.commit('setEnglishDict', englishDict)
       }, 'Success loading')
@@ -87,7 +87,7 @@ export default createStore({
     async deleteEnglishPhrase(ctx, payload) {
       return catchWrapper(async () => {
         const id = payload.id
-        await axiosIns.delete(`${targetURL}/api/delete-english-phrase/${id}`)
+        await axiosIns.delete(`${targetURL}/delete-english-phrase/${id}`)
         ctx.commit('deleteLocalItem', id)
       }, 'Success deleting')
 
@@ -98,7 +98,7 @@ export default createStore({
     async addEnglishPhrase(ctx, payload) {
       return catchWrapper(async () => {
         const { origin, translate } = payload
-        const response = await axiosIns.post(`${targetURL}/api/add-english-phrase/`, {
+        const response = await axiosIns.post(`${targetURL}/add-english-phrase/`, {
           origin, translate
         })
         const newData = response.data
